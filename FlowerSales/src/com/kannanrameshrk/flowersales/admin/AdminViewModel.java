@@ -1,10 +1,12 @@
 package com.kannanrameshrk.flowersales.admin;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.kannanrameshrk.flowersales.dto.Admin;
 import com.kannanrameshrk.flowersales.dto.Flowers;
 import com.kannanrameshrk.flowersales.dto.Garland;
+import com.kannanrameshrk.flowersales.dto.OrderDetails;
 import com.kannanrameshrk.flowersales.repository.Repository;
 
 class AdminViewModel {
@@ -19,8 +21,12 @@ class AdminViewModel {
 		return valid;
 	}
 
-	public void viewOrders() {
-		
+	public List<OrderDetails> viewOrders() {
+		List<OrderDetails> orderList=Repository.getInstance().viewOrder();
+		if(orderList.isEmpty()) {
+			adminView.showErr("No data found....");
+		}
+		return orderList;
 	}
 
 	public void validate(Flowers flower) throws SQLException {

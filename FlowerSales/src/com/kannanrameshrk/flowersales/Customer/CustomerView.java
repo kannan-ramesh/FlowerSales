@@ -1,6 +1,7 @@
 package com.kannanrameshrk.flowersales.Customer;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,6 +20,7 @@ public class CustomerView {
 	}
 
 	public void init(Scanner input) {
+		LocalDate currentDate = LocalDate.now();
 		boolean loop = true;
 		while (loop) {
 			if (!customerIsLoggedIn) {
@@ -68,11 +70,13 @@ public class CustomerView {
 						customerIsLoggedIn = true;
 						System.out.println("User logged in successfully!");
 
+						currentCustomerId = customerViewModel.getCurrentCustomerId(userName);
+						System.out.println("Your User Id is:"+currentCustomerId  );
 						List<Flowers> availableFlowers = customerViewModel.getAvailableFlowers();
 						List<Garland> availableGarlands = customerViewModel.getAvailableGarlands();
 
 						System.out.println("\t\tAvailable Flowers:");
-						System.out.println("\t\t---------------");
+						System.out.println("\t\t-------------------");
 						System.out.printf("%2s %9s %18s %10s%n", "FlowerID", "Flower", "Price", "Quantity");
 						System.out.println("*********************************************************");
 						for (Flowers flower : availableFlowers) {
@@ -84,7 +88,8 @@ public class CustomerView {
 
 						System.out.printf("%-10s %-20s %-13s %-7s %-10s %-8s%n", "GarlandID", "Garland", "Type", "Size",
 								"Price", "Quantity");
-						System.out.println("**************************************************************************");
+						System.out
+								.println("**************************************************************************");
 						for (Garland garland : availableGarlands) {
 							System.out.printf("%-10d %-20s %-13s %-7s %-10.2f %-8d%n", garland.getGarlandID(),
 									garland.getGarlandName(), garland.getType(), garland.getSize(), garland.getPrice(),
@@ -108,6 +113,7 @@ public class CustomerView {
 				}
 			} else {
 				System.out.println();
+				System.out.println("Welcome! What would you like to purchase?");
 				System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 				System.out.println("^ 1. Purchase Flower         ^");
 				System.out.println("^ 2. Purchase Garland        ^");
@@ -120,11 +126,22 @@ public class CustomerView {
 				switch (purchaseChoice) {
 				case 1:
 					// Purchase flower logic
-					// customerViewModel.purchaseFlower(currentCustomerId, input);
+					LocalDate currentDate1 = LocalDate.now();
+					System.out.println("Enter flower Id:");
+					int flowerId=input.nextInt();
+					System.out.println("Enter quantity:");
+					int quantity=input.nextInt();
+					Flowers flower =new Flowers(flowerId,quantity,currentDate1);
+					try {
+						customerViewModel.purchaseFlower(currentCustomerId, flower);
+						System.out.println("Successfully Purchased..");
+					} catch (SQLException e) {
+						System.out.println("Not purchase in flower"+e);
+					}
 					break;
 				case 2:
 					// Purchase garland logic
-					// customerViewModel.purchaseGarland(currentCustomerId, input);
+					//customerViewModel.purchaseGarland(currentCustomerId, input);
 					break;
 				case 3:
 					customerIsLoggedIn = false;

@@ -71,4 +71,18 @@ class CustomerViewModel {
 		}
 		return null;
 	}
+
+	public int getCurrentCustomerId(String userName) {
+		int id = -1;
+		try {
+			id = Repository.getInstance().getUserID(userName);
+		} catch (SQLException e) {
+			customerView.showErr("Not Found Id"+e);
+		}
+		return id;
+	}
+
+	public void purchaseFlower(int currentCustomerId, Flowers flower) throws SQLException {
+		 Repository.getInstance().purchaseFlower(currentCustomerId,flower);
+	}
 }

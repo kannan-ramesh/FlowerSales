@@ -1,15 +1,17 @@
 package com.kannanrameshrk.flowersales.admin;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 import com.kannanrameshrk.flowersales.dto.Admin;
 import com.kannanrameshrk.flowersales.dto.Flowers;
 import com.kannanrameshrk.flowersales.dto.Garland;
+import com.kannanrameshrk.flowersales.dto.OrderDetails;
 
 public class AdminView {
 	private AdminViewModel adminViewModel;
-	private static boolean isAdminLoggedIn =false;
+	private static boolean isAdminLoggedIn = false;
 	static boolean isValid = false;
 
 	public AdminView() {
@@ -26,7 +28,7 @@ public class AdminView {
 				String username = input.next();
 				System.out.println("Enter enter password:");
 				String pass = input.next();
-				Admin admin = new Admin(username,pass);
+				Admin admin = new Admin(username, pass);
 				try {
 					isValid = adminViewModel.checkAdmin(admin);
 				} catch (SQLException e) {
@@ -68,16 +70,16 @@ public class AdminView {
 					break;
 				case 2:
 					System.out.println("Enter Garland Name:");
-					String garlandName =input.nextLine();
+					String garlandName = input.nextLine();
 					System.out.println("Garland type:");
 					String garlandType = input.nextLine();
 					System.out.println("ENter garland Size:");
-					String size=input.next();
+					String size = input.next();
 					System.out.println("Enter Garland Price:");
-					double garlandPrice=input.nextDouble();
+					double garlandPrice = input.nextDouble();
 					System.out.println("Garlant Quantity:");
 					int garlandQuantity = input.nextInt();
-					Garland garland = new Garland(garlandName,garlandType,size,garlandPrice,garlandQuantity);
+					Garland garland = new Garland(garlandName, garlandType, size, garlandPrice, garlandQuantity);
 					try {
 						adminViewModel.validateGarland(garland);
 						System.out.println("Data added Successfully...");
@@ -86,7 +88,17 @@ public class AdminView {
 					}
 					break;
 				case 3:
-					adminViewModel.viewOrders();
+					List<OrderDetails> orderList = adminViewModel.viewOrders();
+					
+					System.out.println("---------------------------------------------------------------------------------------------");
+					System.out.printf("%-10s %-20s %-15s %-20s %-10s %-10s %-20s%n", "Order ID", "Customer Name",
+							"Contact Number", "Flower Name", "Quantity", "Subtotal", "Purchase Date");
+					System.out.println("---------------------------------------------------------------------------------------------");
+					for (OrderDetails order : orderList) {
+						System.out.printf("%-10s %-20s %-15s %-20s %-10s %-10s %-20s%n", order.getOrderId(),
+								order.getCustomerName(), order.getContactNumber(), order.getFlowerName(),
+								order.getQuantity(), order.getSubtotal(), order.getPurchaseDate());
+					}
 					break;
 				case 4:
 					isAdminLoggedIn = false;
